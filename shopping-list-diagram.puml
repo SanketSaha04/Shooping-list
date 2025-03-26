@@ -1,0 +1,78 @@
+@startuml Shopping List App Architecture
+
+' Styling
+skinparam componentStyle rectangle
+skinparam backgroundColor transparent
+skinparam monochrome false
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam ArrowColor #4F46E5
+skinparam ComponentBackgroundColor #FFFFFF
+
+package "Frontend Application" {
+  [App Component] as App
+  
+  package "Core Components" {
+    [ListSelector] as selector
+    [AddItemForm] as addForm
+    [ShoppingListItem] as item
+    [ListStats] as stats
+    [ListActions] as actions
+    [ViewSelector] as viewSelector
+  }
+
+  package "Views" {
+    [List View] as listView
+    [Grid View] as gridView
+    [Calendar View] as calView
+  }
+
+  package "Data Management" {
+    [Local Storage] as storage
+    [State Management] as state
+  }
+
+  package "Features" {
+    [PDF Export] as pdf
+    [Share Functionality] as share
+    [Budget Tracking] as budget
+    [Item Categories] as categories
+  }
+
+  package "Types & Utils" {
+    [Types] as types
+    [PDF Generator] as pdfGen
+    [Date Utilities] as dateUtils
+  }
+}
+
+' Relationships
+App --> selector : manages lists
+App --> addForm : adds items
+App --> state : manages state
+App --> storage : persists data
+
+selector --> state : updates selection
+addForm --> types : uses types
+item --> types : uses types
+stats --> types : uses types
+
+state --> storage : saves data
+actions --> pdf : exports list
+actions --> share : shares list
+
+viewSelector --> listView : switches to
+viewSelector --> gridView : switches to
+viewSelector --> calView : switches to
+
+pdf --> pdfGen : generates
+stats --> budget : tracks
+
+' Layout Hints
+App -[hidden]-> selector
+selector -[hidden]-> addForm
+addForm -[hidden]-> item
+listView -[hidden]-> gridView
+gridView -[hidden]-> calView
+
+@enduml
